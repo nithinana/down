@@ -3,19 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Site Moved</title>
+  <title>Thirai</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #080808;
       --card: #111111;
-      --surface: #1a1a1a;
       --border: rgba(255,255,255,0.07);
       --border-hover: rgba(255,255,255,0.15);
       --text: #ffffff;
       --muted: rgba(255,255,255,0.4);
       --faint: rgba(255,255,255,0.12);
-      --r: 18px;
       --r-sm: 10px;
     }
 
@@ -40,6 +38,12 @@
       border-radius: 24px;
       padding: 44px 32px 36px;
       text-align: center;
+      animation: fadeUp .35s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .icon-badge {
@@ -52,140 +56,262 @@
       margin: 0 auto 24px;
     }
 
-    .icon-badge svg {
-      width: 24px;
-      height: 24px;
-      opacity: 0.7;
-    }
+    .icon-badge svg { width: 24px; height: 24px; }
 
-    h1 {
-      font-size: 1.45rem;
-      font-weight: 900;
-      letter-spacing: -.3px;
-      margin-bottom: 10px;
-    }
+    h1 { font-size: 1.45rem; font-weight: 900; letter-spacing: -.3px; margin-bottom: 10px; }
 
     .subtitle {
       color: var(--muted);
       font-size: 0.875rem;
-      line-height: 1.55;
-      margin-bottom: 32px;
-    }
-
-    .divider {
-      width: 100%;
-      height: 1px;
-      background: var(--border);
+      line-height: 1.65;
       margin-bottom: 28px;
     }
 
-    .contact-label {
+    .subtitle a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: rgba(255,255,255,0.2);
+      transition: color .15s;
+    }
+    .subtitle a:hover { color: rgba(255,255,255,0.9); }
+
+    .divider { width: 100%; height: 1px; background: var(--border); margin-bottom: 24px; }
+
+    /* PIN toggle */
+    .pin-toggle {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.25);
+      cursor: pointer;
+      margin-bottom: 0;
+      letter-spacing: .2px;
+      transition: color .2s;
+      user-select: none;
+    }
+    .pin-toggle:hover { color: rgba(255,255,255,0.5); }
+
+    /* PIN section */
+    .pin-section {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height .35s ease, opacity .25s ease;
+    }
+    .pin-section.open {
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    .input-label {
       font-size: 10px;
       font-weight: 700;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: .7px;
-      margin-bottom: 10px;
+      margin: 20px 0 10px;
+      text-align: left;
     }
 
-    .contact-row {
+    .pin-row {
       display: flex;
-      align-items: center;
       justify-content: center;
       gap: 8px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: var(--r-sm);
-      padding: 12px 16px;
-      cursor: pointer;
-      transition: border-color .18s, background .18s;
-      text-decoration: none;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
     }
 
-    .contact-row:hover {
-      border-color: var(--border-hover);
-      background: rgba(255,255,255,0.07);
-    }
-
-    .contact-row:active {
-      transform: scale(0.98);
-    }
-
-    .contact-icon {
-      opacity: 0.45;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-    }
-
-    .contact-icon svg { width: 15px; height: 15px; }
-
-    .contact-text {
+    .pin-digit {
+      width: 42px;
+      height: 52px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 900;
+      text-align: center;
+      outline: none;
       font-family: 'DM Mono', monospace;
-      font-size: 0.82rem;
+      transition: border-color .2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .pin-digit:focus { border-color: rgba(255,255,255,0.35); }
+    .pin-digit.err   { border-color: rgba(255, 80, 80, 0.55); }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-5px); }
+      60%       { transform: translateX(5px); }
+    }
+    .pin-row.shake { animation: shake .28s ease; }
+
+    .btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: var(--r-sm);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.07);
       color: var(--text);
-      opacity: 0.75;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s, border-color .18s, transform .1s;
     }
 
-    .or-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 14px 0;
-      color: var(--muted);
-      font-size: 11px;
-    }
+    .btn:hover  { background: rgba(255,255,255,0.11); border-color: rgba(255,255,255,0.2); }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.38; cursor: not-allowed; transform: none; }
 
-    .or-row::before, .or-row::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
+    .status {
+      margin-top: 14px;
+      font-size: 0.78rem;
+      min-height: 18px;
+      color: rgba(255, 80, 80, 0.85);
+      transition: opacity .2s;
     }
+    .status.ok  { color: rgba(100, 220, 130, 0.9); }
+    .status.dim { opacity: 0; }
 
-    .footer-note {
-      margin-top: 28px;
-      font-size: 0.72rem;
-      color: rgba(255,255,255,0.15);
-      font-style: italic;
-    }
+    .card.unlocked .icon-badge { background: rgba(100, 220, 130, 0.12); }
   </style>
 </head>
 <body>
-  <div class="card">
+<div class="card" id="card">
 
-    <div class="icon-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 12h14M13 6l6 6-6 6"/>
-      </svg>
-    </div>
-
-    <h1>there is no site here</h1>
-    <p class="subtitle">
-      the page you're looking for is no longer here.<br>
-    </p>
-
-    <div class="divider"></div>
-
-    <div class="contact-label">contact</div>
-
-    <a class="contact-row" href="mailto:admin@thirai.me">
-      <span class="contact-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="4" width="20" height="16" rx="2"/>
-          <path d="M2 7l10 7 10-7"/>
-        </svg>
-      </span>
-      <span class="contact-text">admin@thirai.me</span>
-    </a>
-
-    <div class="or-row">or</div>
-
-    <div class="contact-row" style="cursor:default;">
-      <span class="contact-text">if you know me, just msg me and ill tell yu whats happening incase i dont check emails</span>
-    </div>
-
+  <div class="icon-badge" id="iconBadge">
+    <!-- ghost / no-entry icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+    </svg>
   </div>
+
+  <h1>there's no site here.</h1>
+  <p class="subtitle" id="subtext">
+    the page you're looking for is no longer here.<br><br>
+    contact <a href="mailto:admin@thirai.me">admin@thirai.me</a><br>
+    or if you know me, just msg me and i'll tell you what's happening in case i don't check emails.
+  </p>
+
+  <div class="divider"></div>
+
+  <p class="pin-toggle" id="pinToggle" onclick="togglePin()">already have a code? enter it here ↓</p>
+
+  <div class="pin-section" id="pinSection">
+    <div class="input-label">your PIN</div>
+
+    <div class="pin-row" id="pinRow">
+      <input type="tel" maxlength="1" class="pin-digit" />
+      <input type="tel" maxlength="1" class="pin-digit" />
+      <input type="tel" maxlength="1" class="pin-digit" />
+      <input type="tel" maxlength="1" class="pin-digit" />
+      <input type="tel" maxlength="1" class="pin-digit" />
+      <input type="tel" maxlength="1" class="pin-digit" />
+    </div>
+
+    <button class="btn" id="submitBtn" onclick="submitPin()">continue</button>
+
+    <div class="status dim" id="status"></div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var SERVER = 'https://account.thirai.uk';
+  var DEST   = atob('aHR0cHM6Ly90aGlyYWkudWs=');
+
+  var digits   = document.querySelectorAll('.pin-digit');
+  var pinRow   = document.getElementById('pinRow');
+  var btn      = document.getElementById('submitBtn');
+  var statusEl = document.getElementById('status');
+  var pinSection = document.getElementById('pinSection');
+  var pinToggle  = document.getElementById('pinToggle');
+  var pinOpen = false;
+
+  window.togglePin = function () {
+    pinOpen = !pinOpen;
+    pinSection.classList.toggle('open', pinOpen);
+    pinToggle.textContent = pinOpen ? 'hide ↑' : 'already have a code? enter it here ↓';
+    if (pinOpen) setTimeout(function () { digits[0].focus(); }, 200);
+  };
+
+  digits.forEach(function (d, i) {
+    d.addEventListener('keydown', function (e) {
+      if (e.key === 'Backspace' && !d.value && i > 0) digits[i - 1].focus();
+      if (e.key === 'Enter') submitPin();
+    });
+    d.addEventListener('input', function () {
+      d.value = d.value.replace(/\D/g, '').slice(-1);
+      if (d.value && i < digits.length - 1) digits[i + 1].focus();
+    });
+  });
+
+  pinRow.addEventListener('paste', function (e) {
+    var text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+    if (!text) return;
+    e.preventDefault();
+    text.slice(0, 6).split('').forEach(function (ch, i) { if (digits[i]) digits[i].value = ch; });
+    digits[Math.min(text.length, 5)].focus();
+  });
+
+  function getPin() {
+    return Array.from(digits).map(function (d) { return d.value; }).join('');
+  }
+
+  function showErr(msg) {
+    statusEl.textContent = msg;
+    statusEl.className = 'status';
+    digits.forEach(function (d) { d.classList.add('err'); });
+    pinRow.classList.remove('shake');
+    void pinRow.offsetWidth;
+    pinRow.classList.add('shake');
+    setTimeout(function () {
+      digits.forEach(function (d) { d.classList.remove('err'); d.value = ''; });
+      digits[0].focus();
+    }, 320);
+  }
+
+  function setLoading(on) {
+    btn.disabled = on;
+    btn.textContent = on ? 'verifying…' : 'continue';
+    if (on) { statusEl.textContent = ''; statusEl.className = 'status dim'; }
+  }
+
+  window.submitPin = function () {
+    var pin = getPin();
+    if (pin.length < 6) { showErr('enter all 6 digits.'); return; }
+    setLoading(true);
+    fetch(SERVER + '/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: pin })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      setLoading(false);
+      if (d.valid) {
+        document.getElementById('card').classList.add('unlocked');
+        document.getElementById('iconBadge').innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13V7a8 8 0 1 0-16 0v6"/><rect x="2" y="13" width="20" height="9" rx="2"/></svg>';
+        document.getElementById('heading').textContent = 'welcome back';
+        document.getElementById('subtext').textContent = 'redirecting you now…';
+        pinSection.style.display = 'none';
+        pinToggle.style.display = 'none';
+        statusEl.textContent = '✓ PIN accepted';
+        statusEl.className = 'status ok';
+        setTimeout(function () { window.location.replace(DEST); }, 900);
+      } else {
+        showErr(d.message || 'incorrect PIN.');
+      }
+    })
+    .catch(function () {
+      setLoading(false);
+      showErr('server unreachable. try again.');
+    });
+  };
+})();
+</script>
 </body>
 </html>
